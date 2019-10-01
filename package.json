@@ -1,0 +1,22 @@
+{
+  "name": "OIDCAuthPlugin",
+  "version": "3.1.0",
+  "description": "Graylog OpenID Connect Authentication Plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jandd/graylog-plugin-auth-oidc"
+  },
+  "scripts": {
+    "build": "webpack --bail"
+  },
+  "keywords": [
+    "graylog", "oidc"
+  ],
+  "author": "Jan Dittberner <jan@dittberner.info>",
+  "license": "GPL-3.0+",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "graylog-web-plugin": "file:../graylog2-server/graylog2-web-interface/packages/graylog-web-plugin"
+  }
+}

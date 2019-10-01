@@ -1,0 +1,35 @@
+sudo: required
+dist: trusty
+language: java
+jdk:
+- oraclejdk8
+addons:
+  apt:
+    packages:
+    - rpm
+install:
+- git clone --branch 3.1 --depth=1 --no-single-branch https://github.com/Graylog2/graylog2-server
+  ../graylog2-server
+- "(cd ../graylog2-server && mvn -DskipTests=true compile -B -V)"
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dskip.web.build=true -B
+  -V
+script:
+- mvn package -B
+before_deploy:
+- mvn jdeb:jdeb && export RELEASE_DEB_FILE=$(ls target/*.deb)
+- mvn rpm:rpm && export RELEASE_RPM_FILE=$(find target/ -name '*.rpm' | tail -1)
+- rm -f target/original-*.jar
+- export RELEASE_PKG_FILE=$(ls target/*.jar)
+- echo "Deploying release to GitHub releases"
+deploy:
+  provider: releases
+  api_key:
+    secure: DTOko6tBoDDa8S/9dY/4DAlm+jHMJSA6Rg3QIXd99JguhilZEfj2nNTEeSwkFGKdFjmTv1RAkAa8X9CuxNg328qaMj8bOrhnP7EyPR1VQxyJ5y+TXLOt/6VtEbqk3YfG0hpU0zScC/znT/MY/HB+RKHaHrLp2lT131hBxVV9uNQQId2OySuWJH8jU38ZY2imnDHptT76uJW+MXGUZZlsOjs/JXNMhAp0nkXDmjBM5iHz48CiB0VA4Ksc4hJKjDW5ANPCoZpw9QhsZZKKnPbD9z+0QeE5uh2gvGCzfZEtts0lrf8Y1NMFP/cvdeRIaUteK3EEuWWVNjnda9ficH5HegOwgnLfCqEmBxCc1HNf278Qv7lf98Cqd2Q9kgCnFnZac4KG4ZPwlXobgdgi1ikLqrHsoMWgvhYxE2AS3YM1YuFANriFX7Zge1+4HKr4NgxuwBBX+2Kyl+UlzWd8LStnbg9VkM1i0i1uym56VVI2fWw7iNVlri1nvGWe4Uy3LWpet3RWDWO/4U4LahDb2YdRNBI2ZbZ8XXMxGSYhkfc6fU7qGwkIYila1RGKX/C4Eg8BhAha8jx1WppcFFuUp8Kom7t9xZRdGl7DR/R96pdHp/oEdp8ZLbS3v9zxmcHiFKZXQRY2NWaNhj22rD+t71iQagmNZ7ov0Et9ljXTxii/8Xo=
+  file:
+    - "${RELEASE_PKG_FILE}"
+    - "${RELEASE_DEB_FILE}"
+    - "${RELEASE_RPM_FILE}"
+  skip_cleanup: true
+  on:
+    tags: true
+    jdk: oraclejdk8
