@@ -1,3 +1,5 @@
+**Status: this is only WIP code, there is no functioning code yet due to time constraints.**
+
 # SSO Authentication Plugin for Graylog
 
 [![Build Status](https://travis-ci.org/jandd/graylog-plugin-auth-oidc.svg?branch=master)](https://travis-ci.org/jandd/graylog-plugin-auth-oidc)
